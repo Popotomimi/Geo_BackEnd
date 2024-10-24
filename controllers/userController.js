@@ -43,7 +43,7 @@ module.exports = class userController {
 
     try {
       await user.save();
-      res.status(200).json({ message: "Ponto registrado!" });
+      res.status(200).json({ message: "Check in registrado!" });
     } catch (error) {
       res.status(500).json({ message: error });
     }
