@@ -2,16 +2,16 @@ const User = require("../models/User");
 
 module.exports = class userController {
   static async register(req, res) {
-    const { name, email, location, datetime, eventId } = req.body;
+    const { name, phone, location, datetime, eventId } = req.body;
 
     // Validações
-    if (!name || !email || !location || !datetime || !eventId) {
+    if (!name || !phone || !location || !datetime || !eventId) {
       return res
         .status(422)
         .json({ message: "Todos os campos são obrigatórios!" });
     }
 
-    const user = new User({ name, email, location, datetime, eventId });
+    const user = new User({ name, phone, location, datetime, eventId });
 
     try {
       await user.save();

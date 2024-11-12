@@ -9,7 +9,7 @@ const User = mongoose.model(
         type: String,
         required: true,
       },
-      email: {
+      phone: {
         type: String,
         required: true,
       },
