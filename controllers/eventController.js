@@ -55,7 +55,7 @@ module.exports = class eventController {
         { new: true }
       );
       if (!updatedEvent) {
-        return res.status(404).json({ message: "Evento não encontrado!" });
+        return res.status(404).json({ message: "Evento não encontrado!!" });
       }
       res
         .status(200)
@@ -71,7 +71,7 @@ module.exports = class eventController {
     try {
       const deletedEvent = await Event.findByIdAndDelete(id);
       if (!deletedEvent) {
-        return res.status(404).json({ message: "Evento não encontrado!" });
+        return res.status(404).json({ message: "Evento não encontrado!!" });
       }
       res.status(200).json({ message: "Evento deletado com sucesso!" });
     } catch (error) {
