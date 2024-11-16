@@ -26,6 +26,10 @@ const User = mongoose.model(
         ref: "Event",
         required: true,
       },
+      pix: {
+        type: String,
+        required: false,
+      },
     },
     { timestamps: true }
   )
