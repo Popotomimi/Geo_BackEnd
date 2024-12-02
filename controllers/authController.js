@@ -7,13 +7,18 @@ const secretKey = "seuSegredoSuperSecreto";
 
 exports.register = async (req, res) => {
   const { username, password } = req.body;
+  console.log("Dados recebidos:", { username, password });
+
   const hashedPassword = await bcrypt.hash(password, 10);
+  console.log("Senha criptografada:", hashedPassword);
 
   try {
     const newUser = new User({ username, password: hashedPassword });
     await newUser.save();
+    console.log("Usuário salvo:", newUser);
     res.status(201).send("Usuário registrado com sucesso!");
   } catch (error) {
+    console.error("Erro ao registrar usuário:", error);
     res.status(500).send("Erro ao registrar usuário.");
   }
 };
