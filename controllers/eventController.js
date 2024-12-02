@@ -1,4 +1,5 @@
 const Event = require("../models/Event");
+const User = require("../models/User");
 
 module.exports = class eventController {
   static async createEvent(req, res) {
@@ -69,11 +70,18 @@ module.exports = class eventController {
     const { id } = req.params;
 
     try {
+      // Deleta o evento
       const deletedEvent = await Event.findByIdAndDelete(id);
       if (!deletedEvent) {
         return res.status(404).json({ message: "Evento não encontrado!!" });
       }
-      res.status(200).json({ message: "Evento deletado com sucesso!" });
+
+      // Deleta todos os usuários associados ao evento
+      await User.deleteMany({ eventId: id });
+
+      res
+        .status(200)
+        .json({ message: "Evento e usuários deletados com sucesso!" });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
