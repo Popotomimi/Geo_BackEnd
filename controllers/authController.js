@@ -1,5 +1,5 @@
 // controllers/authController.js
-const User = require("../models/User");
+const Admin = require("../models/Admin");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
@@ -13,7 +13,7 @@ exports.register = async (req, res) => {
   console.log("Senha criptografada:", hashedPassword);
 
   try {
-    const newUser = new User({ username, password: hashedPassword });
+    const newUser = new Admin({ username, password: hashedPassword });
     await newUser.save();
     console.log("Usuário salvo:", newUser);
     res.status(201).send("Usuário registrado com sucesso!");
@@ -25,7 +25,7 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { username, password } = req.body;
-  const user = await User.findOne({ username });
+  const user = await Admin.findOne({ username });
 
   if (!user) {
     return res.status(401).send("Usuário não encontrado.");
