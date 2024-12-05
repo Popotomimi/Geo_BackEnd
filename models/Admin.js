@@ -1,12 +1,12 @@
 const mongoose = require("../db/conn");
 const { Schema } = mongoose;
 
-const Admin = mongoose.model(
-  "Admin",
-  new Schema({
-    adminname: { type: String, required: true },
-    password: { type: String, required: true },
-  })
-);
+const AdminSchema = new Schema({
+  adminname: { type: String, required: true },
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+});
+
+const Admin = mongoose.model("Admin", AdminSchema);
 
 module.exports = Admin;
