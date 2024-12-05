@@ -6,14 +6,18 @@ const bcrypt = require("bcryptjs");
 const secretKey = "seuSegredoSuperSecreto";
 
 exports.register = async (req, res) => {
-  const { username, password } = req.body;
-  console.log("Dados recebidos:", { username, password });
+  const { adminname, username, password } = req.body;
+  console.log("Dados recebidos:", { adminname, username, password });
 
   const hashedPassword = await bcrypt.hash(password, 10);
   console.log("Senha criptografada:", hashedPassword);
 
   try {
-    const newUser = new Admin({ username, password: hashedPassword });
+    const newUser = new Admin({
+      adminname,
+      username,
+      password: hashedPassword,
+    });
     await newUser.save();
     console.log("Usuário salvo:", newUser);
     res.status(201).send("Usuário registrado com sucesso!");
