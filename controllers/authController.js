@@ -3,14 +3,13 @@ const Admin = require("../models/Admin");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-const secretKey = "seuSegredoSuperSecreto";
+// Helpers
+const createUserToken = require("../helpers/create-user-token");
 
 exports.register = async (req, res) => {
   const { adminname, username, password } = req.body;
-  console.log("Dados recebidos:", { adminname, username, password });
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  console.log("Senha criptografada:", hashedPassword);
 
   try {
     const newUser = new Admin({
@@ -19,7 +18,6 @@ exports.register = async (req, res) => {
       password: hashedPassword,
     });
     await newUser.save();
-    console.log("Usuário salvo:", newUser);
     res.status(201).send("Usuário registrado com sucesso!");
   } catch (error) {
     console.error("Erro ao registrar usuário:", error);
@@ -29,19 +27,39 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { username, password } = req.body;
-  const user = await Admin.findOne({ username });
+
+  // Validações
+  if (!username) {
+    res.status(422).json({ message: "O Usuário é obrigatório!" });
+    return;
+  }
+
+  if (!password) {
+    res.status(422).json({ message: "A senha é obrigatória!" });
+    return;
+  }
+
+  // Verificando se o usuário já esta cadastrado no banco de dados
+  const user = await Admin.findOne({ username: username });
 
   if (!user) {
-    return res.status(401).send("Usuário não encontrado.");
+    res.status(422).json({
+      message: "Não existe usuário cadastrado com essas informações!",
+    });
+    return;
   }
 
-  const isPasswordValid = await bcrypt.compare(password, user.password);
-  if (!isPasswordValid) {
-    return res.status(401).send("Senha incorreta.");
+  // Verificando se a senha é a mesma cadastrada no DB
+  const checkPassword = await bcrypt.compare(password, user.password);
+
+  if (!checkPassword) {
+    res.status(422).json({
+      message: "Senha inválida",
+    });
+    return;
   }
 
-  const token = jwt.sign({ username }, secretKey, { expiresIn: "1h" });
-  res.json({ token });
+  await createUserToken(user, req, res);
 };
 
 exports.verifyToken = (req, res, next) => {
